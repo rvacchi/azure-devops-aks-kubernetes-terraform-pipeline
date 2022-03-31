@@ -1,0 +1,35 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- name: DEV_ENVIRONMENT
+  value: dev
+- name: QA_ENVIRONMENT
+  value: qa  
+
+steps:
+- task: TerraformInstaller@0
+  inputs:
+    terraformVersion: 'latest'
+- task: TerraformCLI@0
+  inputs:
+    command: 'init'
+    backendType: 'azurerm'
+    backendAzureRmResourceGroupName: 'rodolfo-rg'
+    backendAzureRmStorageAccountName: 'rodolfostorage'
+    backendAzureRmContainerName: 'containertfl'
+    backendAzureRmKey: 'my.key'
+    allowTelemetryCollection: true
+    
+- task: TerraformCLI@0
+  inputs:
+    command: 'validate'
+    allowTelemetryCollection: false
